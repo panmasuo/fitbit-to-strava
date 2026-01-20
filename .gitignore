@@ -1,0 +1,7 @@
+# build directories
+build/
+.cache/
+
+# secrets
+client.json
+

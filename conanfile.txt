@@ -1,0 +1,8 @@
+[requires]
+cpr/1.14.1
+nlohmann_json/3.12.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
