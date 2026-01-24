@@ -3,7 +3,8 @@
 Fitbit application cannot sync the non-GPS workouts/activities
 to Strava application. Developers seems to not work on this issue.
 
-There is some tools online for that but connecting private account seems dangerous.
+There are some tools online for syncing those two apps, but connecting
+private accounts to them seems dangerous.
 
 ## Roadmap
 
