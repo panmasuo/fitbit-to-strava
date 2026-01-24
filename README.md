@@ -10,8 +10,8 @@ private accounts to them seems dangerous.
 
 - [x] Fitbit API access
 - [x] Fitbit authentication
-- [ ] Fitbit pull activities
-- [ ] Parse multiple time-series data (heart-rate, etc.) into TCX file
+- [x] Fitbit pull activities
+- [x] Parse multiple time-series data (heart-rate, etc.) into TCX file
 - [ ] Strava API access
 - [ ] Strava push created TCX file
 - [ ] Create user instructions
