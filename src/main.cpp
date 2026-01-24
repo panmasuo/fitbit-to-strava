@@ -1,32 +1,11 @@
 #include <iostream>
 #include <print>
-#include <ranges>
 #include <string>
 #include <string_view>
 
 #include "api.hpp"
+#include "app.hpp"
 #include "json.hpp"
-
-template<typename Strategy>
-struct Trim : std::ranges::range_adaptor_closure<Trim<Strategy>>
-{
-    std::string_view keyword;
-    Strategy subrange;
-
-    constexpr explicit Trim(std::string_view keyword, Strategy callback) : keyword(keyword), subrange(callback) {}
-
-    auto operator()(std::ranges::viewable_range auto&& range) const -> std::string_view
-    {
-        const auto text = std::string_view{range};
-        const auto match = std::string_view{std::ranges::search(text, this->keyword)};
-
-        if (match.empty()) {
-            return {};
-        }
-
-        return this->subrange(text, match);
-    }
-};
 
 auto trim_to = [](std::string_view text, std::string_view match) -> std::string_view
 {
@@ -40,8 +19,8 @@ auto trim_after = [](std::string_view text, std::string_view match) -> std::stri
 
 auto main(int argc, char **argv) -> int
 {
-    const auto client_id = std::string{"deadbeef"};
-    const auto client_secret = std::string{"deadbeef"};
+    const auto client_id = std::string{"23TW88"};
+    const auto client_secret = std::string{"b20d09b151ddf6c461b9e75061b64016"};
     const auto redirect_uri = std::string{"https://localhost:5000"};
 
     const auto authorization_url = fitbit_create_authorization_url(client_id, redirect_uri);
@@ -55,14 +34,25 @@ auto main(int argc, char **argv) -> int
     const auto from_keyword = std::string_view{"code="};
     const auto to_keyword = std::string_view{"#"};
 
-    const auto code = response_url | Trim{from_keyword, trim_to} | std::views::drop(from_keyword.size())
-              | Trim{to_keyword, trim_after} | std::ranges::to<std::string>();
+    const auto code = response_url
+                    | Trim{from_keyword, trim_to} | std::views::drop(from_keyword.size())
+                    | Trim{to_keyword, trim_after} 
+                    | std::ranges::to<std::string>();
 
     const auto& [auth_status_code, auth_text] = fitbit_post_authentication_request(
         client_id, client_secret, redirect_uri, code);
 
-    if (save(auth_text)) {
-        std::println("great success {}", code);
+    const auto auth_json = parse(auth_text);
+    const auto& [activities_status_code, activities_text] = fitbit_get_activities(
+        auth_json.at("access_token"));
+
+    const auto activities_json = parse(activities_text);
+
+    for (const auto& activity : activities_json.at("activities")) {
+        const auto& [heartrate_status_code, heartrate_text] = fitbit_get_heartrate(
+            activity.at("heartRateLink").get<std::string>(), auth_json.at("access_token"));
+
+        create_tcx(activity, parse(heartrate_text));
     }
 
     return {};

@@ -2,5 +2,9 @@
 
 #include <string>
 
-auto save(const std::string& content) -> bool;
+#include "nlohmann/json.hpp"
+
+[[nodiscard]] auto parse(const std::string& content) -> nlohmann::json;
+
+[[nodiscard]] auto save(const std::string& content) -> bool;
 

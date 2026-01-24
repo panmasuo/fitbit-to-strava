@@ -2,11 +2,14 @@
 #include <fstream>
 #include <print>
 
-#include "nlohmann/json.hpp"
-
 #include "json.hpp"
 
 using namespace nlohmann;
+
+auto parse(const std::string& content) -> json
+{
+    return json::parse(content);
+}
 
 auto save(const std::string& content) -> bool
 {
@@ -19,8 +22,7 @@ auto save(const std::string& content) -> bool
         return false;
     }
 
-    const auto parsed = nlohmann::json::parse(content);
-    std::println(file_stream, "{}", parsed.dump(4));
+    std::println(file_stream, "{}", parse(content).dump(4));
 
     return true;
 }

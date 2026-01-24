@@ -3,6 +3,9 @@ build/
 .cache/
 
 # secrets
+workouts/*
+!workouts/.gitkeep
+
 client.json
 token.json
 
