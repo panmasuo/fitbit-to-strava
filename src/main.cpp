@@ -19,8 +19,8 @@ auto trim_after = [](std::string_view text, std::string_view match) -> std::stri
 
 auto main(int argc, char **argv) -> int
 {
-    const auto client_id = std::string{"23TW88"};
-    const auto client_secret = std::string{"b20d09b151ddf6c461b9e75061b64016"};
+    const auto client_id = std::string{"deadbeef"};
+    const auto client_secret = std::string{"deadbeef"};
     const auto redirect_uri = std::string{"https://localhost:5000"};
 
     const auto authorization_url = fitbit_create_authorization_url(client_id, redirect_uri);
