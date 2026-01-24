@@ -1,3 +1,4 @@
+#include <chrono>
 #include <format>
 
 #include "cpr/cpr.h"
@@ -24,6 +25,33 @@ auto fitbit_post_authentication_request(
         cpr::Payload{{"client_id", client_id}, {"grant_type", "authorization_code"},
                      {"code", code}, {"redirect_uri", redirect_uri}},
         cpr::Authentication{client_id, client_secret, cpr::AuthMode::BASIC}
+    );
+
+    return {response.status_code, response.text};
+}
+
+auto fitbit_get_activities(const std::string& access_token) -> std::tuple<int, std::string>
+{
+    const auto get_url = std::format(
+        "https://api.fitbit.com/1/user/-/activities/list.json?beforeDate={:%Y-%m-%d}&limit=5",
+        std::chrono::current_zone()->to_local(std::chrono::system_clock::now())
+    );
+
+    const auto response = cpr::Get(
+        cpr::Url{get_url},
+        cpr::Header{{"Authorization", "Bearer " + access_token}}
+    );
+
+    return {response.status_code, response.text};
+}
+
+auto fitbit_get_heartrate(
+    const std::string& heartrate_link, const std::string& access_token
+) -> std::tuple<int, std::string>
+{
+    const auto response = cpr::Get(
+        cpr::Url{heartrate_link},
+        cpr::Header{{"Authorization", "Bearer " + access_token}}
     );
 
     return {response.status_code, response.text};
