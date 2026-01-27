@@ -16,4 +16,3 @@ find_package(nlohmann_json REQUIRED)
 
 add_executable(fitbit ${SOURCES})
 target_link_libraries(fitbit cpr::cpr nlohmann_json::nlohmann_json)
-

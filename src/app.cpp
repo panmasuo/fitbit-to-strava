@@ -6,7 +6,7 @@
 
 using namespace nlohmann;
 
-auto create_tcx(const json& activity, const json& heartrate) -> bool
+auto create_tcx(const json& activity, const json& heartrate) -> std::filesystem::path 
 {
     // TODO catch json errors
     const auto activity_name = activity.at("activityName").get<std::string>();
@@ -23,7 +23,7 @@ auto create_tcx(const json& activity, const json& heartrate) -> bool
     if (!file_stream) {
         std::println("Cannot open file stream for {}", file_name.string());
 
-        return false;
+        return {};
     }
 
 /* NOTE: funny formatting */
@@ -38,8 +38,10 @@ auto create_tcx(const json& activity, const json& heartrate) -> bool
         <Track>
 )", activity_log_id, activity_start_time, activity_duration, activity_calories);
 
+    const auto& date = std::string_view{activity_start_time}.substr(
+        0, std::string_view{"yyyy-mm-ddT"}.length());
+
     for (const auto& point : heartrate.at("activities-heart-intraday").at("dataset")) {
-        const auto& date = std::string_view{activity_start_time}.substr(0, 11);  // yyyy-mm-ddT
         const auto& time = point.at("time").get<std::string>();
         const auto& value = point.at("value").get<int>();
 
@@ -60,6 +62,6 @@ auto create_tcx(const json& activity, const json& heartrate) -> bool
 </TrainingCenterDatabase>
 )");
 
-    return true;
+    return file_name;
 }
 

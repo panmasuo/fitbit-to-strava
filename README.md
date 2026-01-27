@@ -8,13 +8,22 @@ private accounts to them seems dangerous.
 
 ## Roadmap
 
+### 1.0
+
 - [x] Fitbit API access
 - [x] Fitbit authentication
 - [x] Fitbit pull activities
 - [x] Parse multiple time-series data (heart-rate, etc.) into TCX file
-- [ ] Strava API access
-- [ ] Strava push created TCX file
+- [x] Strava API access
+- [x] Strava push created TCX file
+- [ ] Configure from file
 - [ ] Create user instructions
+- [ ] Clean TUI
+
+### 2.0
+
+- [ ] Simple GUI application
+- [ ] Dockerize
 
 ## Application building
 
