@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <ranges>
 #include <string_view>
 
@@ -29,5 +30,5 @@ struct Trim : std::ranges::range_adaptor_closure<Trim<Strategy>>
 [[nodiscard]] auto create_tcx(
     const nlohmann::json& activity,
     const nlohmann::json& heartrate
-) -> bool;
+) -> std::filesystem::path;
 

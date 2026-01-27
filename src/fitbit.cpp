@@ -3,7 +3,7 @@
 
 #include "cpr/cpr.h"
 
-#include "api.hpp"
+#include "fitbit.hpp"
 
 auto fitbit_create_authorization_url(
     const std::string& client_id, const std::string& redirect_uri
@@ -56,4 +56,3 @@ auto fitbit_get_heartrate(
 
     return {response.status_code, response.text};
 }
-
