@@ -1,5 +1,6 @@
 #include <chrono>
 #include <format>
+#include <print>
 
 #include "cpr/session.h"
 
@@ -15,7 +16,8 @@ auto fitbit_create_authorization_url(
     session.SetParameters({
         {"response_type", "code"},
         {"client_id", client_id},
-        {"redirect_uri", redirect_uri}
+        {"redirect_uri", redirect_uri},
+        {"scope", "activity heartrate"}
     });
 
     return session.GetFullRequestUrl();
@@ -47,17 +49,18 @@ auto fitbit_get_activities(const std::string& access_token) -> std::tuple<int, s
     using namespace std::chrono;
 
     auto session = cpr::Session{};
-    const auto today = std::format("{:%Y-%m-%d}", current_zone()->to_local(system_clock::now()));
+    const auto tomorrow = std::format("{:%Y-%m-%d}", current_zone()->to_local(system_clock::now() + days{1}));
 
     session.SetUrl({"https://api.fitbit.com/1/user/-/activities/list.json"});
     session.SetParameters({
-        {"beforeDate", today},
-        {"limit", "5"}
+        {"beforeDate", tomorrow},
+        {"limit", "15"}
     });
     session.SetHeader({
         {"Authorization", "Bearer " + access_token}
     });
 
+    std::println("{}", session.GetFullRequestUrl());
     const auto response = session.Get();
 
     return {response.status_code, response.text};
