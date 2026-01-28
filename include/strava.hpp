@@ -15,5 +15,5 @@
 [[nodiscard]] auto strava_post_workout(
     const std::string& access_token, const std::filesystem::path& workout,
     const std::string& activity_type
-) -> bool;
+) -> std::tuple<int, std::string>;
 

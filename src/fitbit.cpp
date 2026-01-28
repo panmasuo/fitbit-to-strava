@@ -1,7 +1,7 @@
 #include <chrono>
 #include <format>
 
-#include "cpr/cpr.h"
+#include "cpr/session.h"
 
 #include "fitbit.hpp"
 
