@@ -19,4 +19,3 @@
 [[nodiscard]] auto fitbit_get_heartrate(
     const std::string& heartrate_link, const std::string& access_token
 ) -> std::tuple<int, std::string>;
-

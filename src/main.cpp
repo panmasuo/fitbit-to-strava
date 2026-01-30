@@ -91,7 +91,7 @@ auto main(int argc, char **argv) -> int
     int workout_index;
     std::cin >> workout_index;
 
-    const auto reps = strava_post_workout(strava_auth_json.at("access_token"), workouts.at(workout_index), "RockClimbing");
+    const auto reps = strava_post_workout(strava_auth_json.at("access_token"), workouts.at(workout_index), "WeightTraining");
 
     return {};
 }
