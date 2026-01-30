@@ -1,0 +1,13 @@
+{
+    "fitbit": {
+        "id": "",
+        "secret": ""
+    },
+    "strava": {
+        "id": "",
+        "secret": ""
+    },
+    "config": {
+        "redirect_url": ""
+    }
+}

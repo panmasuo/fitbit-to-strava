@@ -1,11 +1,12 @@
-# build directories
+# build things
 build/
 .cache/
+CMakeUserPresets.json
 
-# secrets
+# workout directory
 workouts/*
 !workouts/.gitkeep
 
+# secrets
 client.json
 token.json
-
