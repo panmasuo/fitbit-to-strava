@@ -6,23 +6,43 @@
 
 using namespace nlohmann;
 
+auto load(const std::filesystem::path& name) -> json
+{
+    auto file_stream = std::ifstream{name, std::ios::in};
+
+    if (!file_stream) {
+        std::println("Cannot open file stream for {}", name.string());
+
+        return {};
+    }
+
+    std::string buffer{std::istreambuf_iterator<char>(file_stream),
+                       std::istreambuf_iterator<char>()};
+
+    std::println("Loaded {}.", name.string());
+    return parse(buffer);
+}
+
 auto parse(const std::string& content) -> json
 {
     return json::parse(content);
 }
 
-auto save(const std::string& content) -> bool
+auto save(
+    const std::filesystem::path& name,
+    const std::string& content
+) -> bool
 {
-    const auto file_name = std::filesystem::path("token.json");
-    auto file_stream = std::ofstream{file_name, std::ios::out | std::ios::trunc};
+    auto file_stream = std::ofstream{name};
 
     if (!file_stream) {
-        std::println("Cannot open file stream for {}", file_name.string());
+        std::println("Cannot open file stream for {:s}", name.string());
 
         return false;
     }
 
     std::println(file_stream, "{}", parse(content).dump(4));
+    std::println("Saved {}.", name.string());
 
     return true;
 }

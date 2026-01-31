@@ -44,6 +44,25 @@ auto fitbit_post_authentication_request(
     return {response.status_code, response.text};
 }
 
+auto fitbit_post_refresh_token(
+    const std::string &client_id, const std::string &client_secret,
+    const std::string &refresh_token
+) -> std::tuple<int, std::string>
+{
+    auto session = cpr::Session();
+
+    session.SetUrl({"https://api.fitbit.com/oauth2/token"});
+    session.SetPayload({
+        {"grant_type", "refresh_token"},
+        {"refresh_token", refresh_token},
+    });
+    session.SetAuth({client_id, client_secret, cpr::AuthMode::BASIC});
+
+    const auto response = session.Post();
+
+    return {response.status_code, response.text};
+}
+
 auto fitbit_get_activities(const std::string& access_token) -> std::tuple<int, std::string>
 {
     using namespace std::chrono;
