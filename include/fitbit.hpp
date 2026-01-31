@@ -3,24 +3,29 @@
 #include <tuple>
 #include <string>
 
-[[nodiscard]] auto fitbit_create_authorization_url(
-    const std::string& client_id, const std::string& redirect_uri
-) -> std::string;
+struct Fitbit
+{
+    std::string client_id;
+    std::string client_secret;
 
-[[nodiscard]] auto fitbit_post_authentication_request(
-    const std::string& client_id, const std::string& client_secret,
-    const std::string& redirect_uri, const std::string& code
-) -> std::tuple<int, std::string>;
+    [[nodiscard]] auto authorization_url(
+        std::string_view redirect_uri
+    ) const -> std::string;
 
-[[nodiscard]] auto fitbit_post_refresh_token(
-    const std::string &client_id, const std::string &client_secret,
-    const std::string &refresh_token
-) -> std::tuple<int, std::string>;
+    [[nodiscard]] auto authorize(
+        std::string_view redirect_uri,
+        std::string_view code
+    ) const -> std::tuple<int, std::string>;
 
-[[nodiscard]] auto fitbit_get_activities(
-    const std::string& access_token
-) -> std::tuple<int, std::string>;
+    [[nodiscard]] auto refresh(
+        std::string_view refresh_token
+    ) const -> std::tuple<int, std::string>;
 
-[[nodiscard]] auto fitbit_get_heartrate(
-    const std::string& heartrate_link, const std::string& access_token
-) -> std::tuple<int, std::string>;
+    [[nodiscard]] auto activities(
+        std::string_view access_token
+    ) const -> std::tuple<int, std::string>;
+
+    [[nodiscard]] auto heart_rate(
+        std::string_view heartrate_link, std::string_view access_token
+    ) const -> std::tuple<int, std::string>;
+};

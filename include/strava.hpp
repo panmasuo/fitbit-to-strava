@@ -3,17 +3,21 @@
 #include <filesystem>
 #include <string>
 
-[[nodiscard]] auto strava_create_auth_url(
-    const std::string& client_id, const std::string& redirect_uri
-) -> std::string;
+struct Strava
+{
+    std::string client_id;
+    std::string client_secret;
 
-[[nodiscard]] auto strava_post_authentication_request(
-    const std::string& client_id, const std::string& client_secret,
-    const std::string& redirect_uri, const std::string& code
-) -> std::tuple<int, std::string>;
+    [[nodiscard]] auto authorization_url(
+        std::string_view redirect_uri
+    ) const -> std::string;
 
-[[nodiscard]] auto strava_post_workout(
-    const std::string& access_token, const std::filesystem::path& workout,
-    const std::string& activity_type
-) -> std::tuple<int, std::string>;
+    [[nodiscard]] auto authorize(
+        std::string_view redirect_uri, std::string_view code
+    ) const -> std::tuple<int, std::string>;
 
+    [[nodiscard]] auto post_workout(
+        std::string_view access_token, const std::filesystem::path& workout,
+        std::string_view activity_type
+    ) const -> std::tuple<int, std::string>;
+};

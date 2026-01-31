@@ -1,10 +1,51 @@
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <print>
 
 #include "app.hpp"
 
 using namespace nlohmann;
+
+auto WorkoutName::convert_from(std::string_view fitbit_workout_filename) -> std::string_view
+{
+    const auto workout = trimmer(fitbit_workout_filename, "fitbit_", "_20");  // workouts/fitbit_workout_20xx.tcx
+
+    auto has_fitbit_workout = [fitbit_workout_filename](const auto& workout) -> bool {
+        return std::get<FITBIT>(workout) == fitbit_workout_filename;
+    };
+
+    const auto it = std::ranges::find_if(WorkoutName::workout_map, has_fitbit_workout);
+
+    return (it != workout_map.end()) ? std::get<STRAVA>(*it) : WorkoutName::default_workout;
+}
+
+auto trimmer(std::string_view text, std::string_view from_keyword, std::string_view to_keyword) -> std::string
+{
+    auto trim_to = [](std::string_view text, std::string_view match) -> std::string_view
+    {
+        return {match.begin(), text.end()};
+    };
+
+    auto trim_after = [](std::string_view text, std::string_view match) -> std::string_view
+    {
+        return {text.begin(), match.begin()};
+    };
+
+    return text | Trim{from_keyword, trim_to} | std::views::drop(from_keyword.size())
+                | Trim{to_keyword, trim_after} 
+                | std::ranges::to<std::string>();
+}
+
+auto get_code_from_url(std::string_view url, std::string_view from_keyword, std::string_view to_keyword) -> std::string
+{
+    std::print("Open this link:\n\t> {}\nPaste response URL:\n\t> ", url);
+
+    auto response_url = std::string{};
+    std::cin >> response_url;
+
+    return trimmer(response_url, from_keyword, to_keyword);
+}
 
 auto create_tcx(const json& activity, const json& heartrate) -> std::filesystem::path 
 {
@@ -65,3 +106,15 @@ auto create_tcx(const json& activity, const json& heartrate) -> std::filesystem:
     return file_name;
 }
 
+auto ask_for_workout(const std::vector<std::filesystem::path>& workouts) -> int
+{
+    for (const auto& [i, workout] : std::views::enumerate(workouts)) {
+        std::println("{}.\t{}", i, workout.string());
+    }
+
+    int chosen_workout;
+    std::print("Choose workout to upload to Strava:\n\t> ");
+    std::cin >> chosen_workout;
+
+    return chosen_workout;
+}
