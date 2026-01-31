@@ -16,7 +16,7 @@ private accounts to them seems dangerous.
 - [x] Parse multiple time-series data (heart-rate, etc.) into TCX file
 - [x] Strava API access
 - [x] Strava push created TCX file
-- [ ] Configure from file
+- [x] Configure from file
 - [ ] Create user instructions
 - [ ] Clean TUI
 
@@ -40,4 +40,3 @@ private accounts to them seems dangerous.
 ## Strava API access
 
 // TODO instructions on how to access Strava tokens and how to authorize
-
