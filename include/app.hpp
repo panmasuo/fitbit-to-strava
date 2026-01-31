@@ -6,6 +6,22 @@
 
 #include "nlohmann/json.hpp"
 
+struct WorkoutName
+{
+    [[nodiscard]] static auto convert_from(std::string_view fitbit_workout) -> std::string_view;
+
+  private:
+    constexpr static auto default_workout = std::string_view{"Workout"};
+
+    constexpr static auto FITBIT = int(0);
+    constexpr static auto STRAVA = int(1);
+
+    constexpr static auto workout_map = std::array<std::tuple<std::string_view, std::string_view>, 2>{{
+        {std::string_view{"Indoor climbing"}, std::string_view{"RockClimbing"}},
+        {std::string_view{"Weightlifting"}, std::string_view{"WeightTraining"}}
+    }};
+};
+
 template<typename Strategy>
 struct Trim : std::ranges::range_adaptor_closure<Trim<Strategy>>
 {
@@ -26,6 +42,10 @@ struct Trim : std::ranges::range_adaptor_closure<Trim<Strategy>>
         return this->subrange(text, match);
     }
 };
+
+[[nodiscard]] auto trimmer(
+    std::string_view text, std::string_view from_keyword, std::string_view to_keyword
+) -> std::string;
 
 [[nodiscard]] auto get_code_from_url(
     std::string_view url, std::string_view from_keyword, std::string_view to_keyword

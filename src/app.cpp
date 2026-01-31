@@ -7,30 +7,45 @@
 
 using namespace nlohmann;
 
-auto get_code_from_url(std::string_view url, std::string_view from_keyword, std::string_view to_keyword) -> std::string
+auto WorkoutName::convert_from(std::string_view fitbit_workout_filename) -> std::string_view
+{
+    const auto workout = trimmer(fitbit_workout_filename, "fitbit_", "_20");  // workouts/fitbit_workout_20xx.tcx
+
+    auto has_fitbit_workout = [fitbit_workout_filename](const auto& workout) -> bool {
+        return std::get<FITBIT>(workout) == fitbit_workout_filename;
+    };
+
+    const auto it = std::ranges::find_if(WorkoutName::workout_map, has_fitbit_workout);
+
+    return (it != workout_map.end()) ? std::get<STRAVA>(*it) : WorkoutName::default_workout;
+}
+
+auto trimmer(std::string_view text, std::string_view from_keyword, std::string_view to_keyword) -> std::string
 {
     auto trim_to = [](std::string_view text, std::string_view match) -> std::string_view
     {
-        std::println("{}", text);
         return {match.begin(), text.end()};
     };
 
     auto trim_after = [](std::string_view text, std::string_view match) -> std::string_view
     {
-        std::println("{}", text);
         return {text.begin(), match.begin()};
     };
 
+    return text | Trim{from_keyword, trim_to} | std::views::drop(from_keyword.size())
+                | Trim{to_keyword, trim_after} 
+                | std::ranges::to<std::string>();
+}
+
+auto get_code_from_url(std::string_view url, std::string_view from_keyword, std::string_view to_keyword) -> std::string
+{
     std::print("Open this link:\n\t> {}\nPaste response URL:\n\t> ", url);
 
     auto response_url = std::string{};
     std::cin >> response_url;
 
-    return response_url | Trim{from_keyword, trim_to} | std::views::drop(from_keyword.size())
-                        | Trim{to_keyword, trim_after} 
-                        | std::ranges::to<std::string>();
+    return trimmer(response_url, from_keyword, to_keyword);
 }
-
 
 auto create_tcx(const json& activity, const json& heartrate) -> std::filesystem::path 
 {

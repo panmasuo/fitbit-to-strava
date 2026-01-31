@@ -70,13 +70,17 @@ auto main(int argc, char **argv) -> int
     const auto strava_auth_json = parse(strava_auth_text);
     const auto chosen_workout = ask_for_workout(workouts);
 
-    const auto workout_response = strava.post_workout(strava_auth_json.at("access_token").get<std::string_view>(), workouts.at(chosen_workout), "WeightTraining");
+    const auto workout_response = strava.post_workout(
+        strava_auth_json.at("access_token").get<std::string_view>(),
+        workouts.at(chosen_workout),
+        WorkoutName::convert_from(workouts.at(chosen_workout).string())
+    );
 
-    if (cpr::status::HTTP_OK == std::get<int>(workout_response)) {
-        std::println("Workout {} posted, thanks!", workouts.at(chosen_workout).string());
+    if (cpr::status::HTTP_CREATED == std::get<int>(workout_response)) {
+        std::println("Workout {} created, thanks!", workouts.at(chosen_workout).string());
     }
     else {
-        std::println("Workout {} not posted due to error, exiting.", workouts.at(chosen_workout).string());
+        std::println("Workout {} not created due to error, exiting.", workouts.at(chosen_workout).string());
     }
 
     return {};
