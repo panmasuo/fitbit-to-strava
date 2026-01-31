@@ -1,10 +1,36 @@
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <print>
 
 #include "app.hpp"
 
 using namespace nlohmann;
+
+auto get_code_from_url(std::string_view url, std::string_view from_keyword, std::string_view to_keyword) -> std::string
+{
+    auto trim_to = [](std::string_view text, std::string_view match) -> std::string_view
+    {
+        std::println("{}", text);
+        return {match.begin(), text.end()};
+    };
+
+    auto trim_after = [](std::string_view text, std::string_view match) -> std::string_view
+    {
+        std::println("{}", text);
+        return {text.begin(), match.begin()};
+    };
+
+    std::print("Open this link:\n\t> {}\nPaste response URL:\n\t> ", url);
+
+    auto response_url = std::string{};
+    std::cin >> response_url;
+
+    return response_url | Trim{from_keyword, trim_to} | std::views::drop(from_keyword.size())
+                        | Trim{to_keyword, trim_after} 
+                        | std::ranges::to<std::string>();
+}
+
 
 auto create_tcx(const json& activity, const json& heartrate) -> std::filesystem::path 
 {
@@ -65,3 +91,15 @@ auto create_tcx(const json& activity, const json& heartrate) -> std::filesystem:
     return file_name;
 }
 
+auto ask_for_workout(const std::vector<std::filesystem::path>& workouts) -> int
+{
+    for (const auto& [i, workout] : std::views::enumerate(workouts)) {
+        std::println("{}.\t{}", i, workout.string());
+    }
+
+    int chosen_workout;
+    std::print("Choose workout to upload to Strava:\n\t> ");
+    std::cin >> chosen_workout;
+
+    return chosen_workout;
+}

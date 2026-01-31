@@ -27,8 +27,13 @@ struct Trim : std::ranges::range_adaptor_closure<Trim<Strategy>>
     }
 };
 
+[[nodiscard]] auto get_code_from_url(
+    std::string_view url, std::string_view from_keyword, std::string_view to_keyword
+) -> std::string;
+
 [[nodiscard]] auto create_tcx(
     const nlohmann::json& activity,
     const nlohmann::json& heartrate
 ) -> std::filesystem::path;
 
+[[nodiscard]] auto ask_for_workout(const std::vector<std::filesystem::path>& workouts) -> int;
