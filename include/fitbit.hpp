@@ -12,6 +12,11 @@
     const std::string& redirect_uri, const std::string& code
 ) -> std::tuple<int, std::string>;
 
+[[nodiscard]] auto fitbit_post_refresh_token(
+    const std::string &client_id, const std::string &client_secret,
+    const std::string &refresh_token
+) -> std::tuple<int, std::string>;
+
 [[nodiscard]] auto fitbit_get_activities(
     const std::string& access_token
 ) -> std::tuple<int, std::string>;

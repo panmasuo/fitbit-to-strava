@@ -8,6 +8,6 @@
         "secret": ""
     },
     "config": {
-        "redirect_url": ""
+        "redirect_uri": ""
     }
 }
