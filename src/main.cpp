@@ -1,5 +1,6 @@
 #include <cpr/status_codes.h>
 #include <print>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -84,7 +85,6 @@ auto main(int argc, char **argv) -> int
     }
 
     const auto chosen_workout = ask_for_workout(workouts);
-
     const auto workout_response = strava.post_workout(
         strava_tokens.at("access_token").get<std::string_view>(),
         workouts.at(chosen_workout),
