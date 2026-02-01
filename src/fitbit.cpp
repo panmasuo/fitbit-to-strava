@@ -74,7 +74,6 @@ auto Fitbit::activities(std::string_view access_token) const -> std::tuple<int, 
         {"Authorization", "Bearer " + std::string{access_token}}
     });
 
-    std::println("{}", session.GetFullRequestUrl());
     const auto response = session.Get();
 
     return {response.status_code, response.text};

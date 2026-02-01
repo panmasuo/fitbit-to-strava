@@ -16,6 +16,10 @@ struct Strava
         std::string_view redirect_uri, std::string_view code
     ) const -> std::tuple<int, std::string>;
 
+    [[nodiscard]] auto refresh(
+        std::string_view refresh_token
+    ) const -> std::tuple<int, std::string>;
+
     [[nodiscard]] auto post_workout(
         std::string_view access_token, const std::filesystem::path& workout,
         std::string_view activity_type
