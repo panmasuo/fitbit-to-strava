@@ -39,6 +39,25 @@ auto Strava::authorize(
     return {response.status_code, response.text};
 }
 
+auto Strava::refresh(
+    std::string_view refresh_token
+) const -> std::tuple<int, std::string>
+{
+    auto session = cpr::Session();
+
+    session.SetUrl({"https://www.strava.com/api/v3/oauth/token"});
+    session.SetPayload({
+        {"client_id", this->client_id},
+        {"client_secret", this->client_secret},
+        {"grant_type", "refresh_token"},
+        {"refresh_token", refresh_token.data()},
+    });
+
+    const auto response = session.Post();
+
+    return {response.status_code, response.text};
+}
+
 auto Strava::post_workout(
     std::string_view access_token, const std::filesystem::path& workout,
     std::string_view activity_type

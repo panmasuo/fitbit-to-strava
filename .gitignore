@@ -9,4 +9,5 @@ workouts/*
 
 # secrets
 client.json
-token.json
+fitbit.json
+strava.json
