@@ -64,8 +64,8 @@ cmake --build --preset conan-release
 
 ## Application running
 
-If Fitbit and Strava client secrets are saved in `client.json` file, application
-is built, run it:
+Fill Fitbit and Strava client secrets in `client.json` file, built the application
+and then run it:
 
 ```bash
 ./build/fitbit
@@ -90,7 +90,6 @@ docker run --rm -it fitbit
 
 ## Fitbit API access
 
-// TODO instructions on how to access Fitbit tokens and how to authorize
 [Start here](https://dev.fitbit.com/apps/new) - login and register an application.
 For redirect URL provide something similar to `https://localhost:5000`.
 
