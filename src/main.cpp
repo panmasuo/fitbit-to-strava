@@ -19,6 +19,7 @@ auto main(int argc, char **argv) -> int
         return {};
     }
 
+    // Fitbit stage - authorize, create tokens, get activities
     Fitbit fitbit{config.at("fitbit").at("id"), config.at("fitbit").at("secret")};
 
     auto fitbit_tokens = load("fitbit.json");
@@ -50,6 +51,7 @@ auto main(int argc, char **argv) -> int
 
     const auto activities_json = parse(std::get<std::string>(activities_response));
 
+    // create new TCX files and save them into directory and vector for user to choose later
     auto workouts = std::vector<std::filesystem::path>{};
     for (const auto& activity : activities_json.at("activities")) {
         const auto heart_response = fitbit.heart_rate(
@@ -58,6 +60,7 @@ auto main(int argc, char **argv) -> int
         workouts.push_back(create_tcx(activity, parse(std::get<std::string>(heart_response))));
     }
 
+    // Strava part - authorize, save tokens, choose the workout to post
     Strava strava{config.at("strava").at("id"), config.at("strava").at("secret")};
 
     auto strava_tokens = load("strava.json");
