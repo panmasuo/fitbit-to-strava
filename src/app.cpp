@@ -9,10 +9,10 @@ using namespace nlohmann;
 
 auto WorkoutName::convert_from(std::string_view fitbit_workout_filename) -> std::string_view
 {
-    const auto workout = trimmer(fitbit_workout_filename, "fitbit_", "_20");  // workouts/fitbit_workout_20xx.tcx
+    const auto fitbit_workout = trimmer(fitbit_workout_filename, "fitbit_", "_20");  // workouts/fitbit_workout_20xx.tcx
 
-    auto has_fitbit_workout = [fitbit_workout_filename](const auto& workout) -> bool {
-        return std::get<FITBIT>(workout) == fitbit_workout_filename;
+    auto has_fitbit_workout = [&](const auto& workout) -> bool {
+        return std::get<FITBIT>(workout) == fitbit_workout;
     };
 
     const auto it = std::ranges::find_if(WorkoutName::workout_map, has_fitbit_workout);
