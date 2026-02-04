@@ -88,10 +88,13 @@ auto main(int argc, char **argv) -> int
     }
 
     const auto chosen_workout = ask_for_workout(workouts);
+    const auto workout_type = WorkoutName::convert_from(workouts.at(chosen_workout).string());
+    std::println("Posting {} to Strava!", workout_type);
+
     const auto workout_response = strava.post_workout(
         strava_tokens.at("access_token").get<std::string_view>(),
         workouts.at(chosen_workout),
-        WorkoutName::convert_from(workouts.at(chosen_workout).string())
+        workout_type
     );
 
     if (cpr::status::HTTP_CREATED == std::get<int>(workout_response)) {
